@@ -60,6 +60,17 @@ private object Helpers {
       case true  => Seq.empty
     }
   }
+
+  /** Wrap a message in colorful error text in the sytle of StageUtils.dramaticError.  That method prints to stdout and by
+    * extracting this to just a method that does the string wrapping, this enables the message to be sent to another
+    * file, e.g., stderr.
+    * @todo Remove/unify this with StageUtils.dramaticError once SFC code is migrated into Chisel3.
+    */
+  def dramaticError(message: String): String = {
+    s"""|${Console.RED + "-" * 78}
+        |Error: $message
+        |${"-" * 78 + Console.RESET}""".stripMargin
+  }
 }
 
 /** A phase that calls and runs CIRCT, specifically `firtool`, while preserving an [[AnnotationSeq]] API.
@@ -199,7 +210,9 @@ class CIRCT extends Phase {
       logger.info(result)
       val errors = stderrStream.toString
       if (exitValue != 0) {
-        StageUtils.dramaticError(s"${binary} failed.\nExitCode:\n${exitValue}\nSTDOUT:\n${result}\nSTDERR:\n${errors}")
+        System.err.println(
+          dramaticError(s"${binary} failed.\nExitCode:\n${exitValue}\nSTDOUT:\n${result}\nSTDERR:\n${errors}")
+        )
         throw new StageError()
       }
       if (split) {
@@ -232,7 +245,9 @@ class CIRCT extends Phase {
       }
     } catch {
       case a: java.io.IOException =>
-        StageUtils.dramaticError(s"Binary '$binary' was not found on the $$PATH. (Do you have CIRCT installed?)")
+        System.err.println(
+          dramaticError(s"Binary '$binary' was not found on the $$PATH. (Do you have CIRCT installed?)")
+        )
         throw new StageError(cause = a)
     }
 
