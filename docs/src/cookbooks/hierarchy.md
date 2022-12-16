@@ -154,7 +154,7 @@ import chisel3._
 import chisel3.experimental.hierarchy.{Definition, instantiable, public}
 
 @instantiable
-class AddOne(val width: Int) extends Module {
+class AddOne(val width: Int) extends RawModule {
   @public val width = width
   @public val in  = IO(Input(UInt(width.W)))
   @public val out = IO(Output(UInt(width.W)))
@@ -167,7 +167,6 @@ class Top extends Module {
 }
 ```
 
-<!-- TODO: This currently does not work. -->
 ```scala
 circt.stage.ChiselStage.emitSystemVerilog(new Top())
 ```
