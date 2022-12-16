@@ -77,7 +77,7 @@ jobs:
         run: |
           mkdir usr
           # Escape version forward slashes for use in URL
-          VERSION=$(echo ${{ matrix.circt }} | sed 's|/|%2F|g')
+          VERSION=$(echo "sifive/1/24/0" | sed 's|/|%2F|g')
           wget https://github.com/llvm/circt/releases/download/${VERSION}/circt-bin-ubuntu-20.04.tar.gz -O - | tar -zx -C usr/
           echo "$(pwd)/usr/bin" >> $GITHUB_PATH
       - name: Check Formatting
