@@ -64,5 +64,5 @@ class Test extends Module {
   }}
 }
 
-(new ChiselStage).execute(Array.empty, Seq(ChiselGeneratorAnnotation(() => new Test)))
+ChiselStage.emitSystemVerilog(new Test)
 ```
